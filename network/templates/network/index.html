@@ -1,0 +1,20 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <h1>All Posts</h1>
+    <div id="us"></div>
+    <div id="follow"></div>
+    <div id="followers"></div>
+    <hr>
+    <h3 style="margin-left: 30px;">New Post</h3>
+    <form id="post-form">
+        <input type="hidden" id="username" value="{{ user.username }}">
+        <textarea id="textarea" style="width: 80%; margin-left: 30px;"></textarea>
+        <button id="post" style="background-color: blue; color: white; margin-left: 30px; border-radius: 10px;">Post</button>
+    </form>
+    <hr>
+    
+    <div id="view"></div>
+    <div id="viewuser"></div>
+{% endblock %}
+
