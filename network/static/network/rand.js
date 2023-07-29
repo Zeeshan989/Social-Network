@@ -52,6 +52,9 @@ function load_posts() {
                 uname.style.fontFamily = 'Georgia';
                 uname.style.fontWeight = 'bold';
 
+               
+                
+
                 uname.addEventListener('click', () => {
                     // Define the function to be executed when the user name is clicked
                     upage(user_id);
@@ -82,11 +85,15 @@ function load_posts() {
                             })
                             .then(response => {
                                 if (response.status === 201) {
-                                    location.reload();
+                                    like.innerText = parseInt(like.innerText) + 1;
+                                    // Increment the likes count and update the innerText
+                                    
+                                    
                                     
                                 }
                             })
-                        } else if (likeButton.innerText === 'UNLIKE') {
+                        }
+                        else if (likeButton.innerText === 'UNLIKE') {
                             likeButton.innerText = 'LIKE'; // Reset the button text back to LIKE
                             fetch(`/post/${id}`, {
                                 method: 'PUT',
@@ -96,17 +103,27 @@ function load_posts() {
                             })
                             .then(response => {
                                 if (response.status === 201) {
-                                    console.log("UNLIKED");
-                                   
-                                    location.reload();
+                                    like.innerText = parseInt(like.innerText) - 1;
+                                    // Increment the likes count and update the innerText
+                                    
                                 }
                             })
                         }
                     });
 
-        // Append the button to the appropriate element in the UI
-        // ...
-
+                            // Append the button to the appropriate element in the UI
+                            // ...
+                            fetch(`/post/${id}`)// URL matches the endpoint in your Django URLs   
+                            .then(response => {
+                                if (response.status === 201) {
+                                    likeButton.innerText ='LIKE';
+                                        
+                                }
+                                else if (response.status === 204) {
+                                    likeButton.innerText ='UNLIKE';
+                                       
+                                }
+                            })
                         
                     
 

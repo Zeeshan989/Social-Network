@@ -111,25 +111,27 @@ def postid(request, post_id):
   
     # Query for requested post
     try:
-        pt = Post.objects.get(id=post_id)
+            post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
-        return JsonResponse({"error": "Post not found."}, status=404)
+            return JsonResponse({"error": "Post not found."}, status=404)
     
-    if request.method == "POST":
+    if request.method == "GET":
+        if Likes.objects.filter(liked_by=request.user, post_liked=post).exists():
+            return JsonResponse({"message": "Post already liked."}, status=204)
+        else:
+            return JsonResponse({"message": "Post not already liked."}, status=201)
+
+
+
+    
+    elif request.method == "POST":
         # Handle POST request (creating a new post) here
         # Your existing POST logic goes here
         
         return JsonResponse({"message": "Post created successfully."}, status=201)
     
     elif request.method == "PUT":
-        data = json.loads(request.body)
-        
-
-        try:
-            post = Post.objects.get(id=post_id)
-        except Post.DoesNotExist:
-            return JsonResponse({"error": "Post not found."}, status=404)
-        
+        data = json.loads(request.body)   
         if (data.get("likes")):
 
             if not Likes.objects.filter(post_liked=post):
@@ -148,9 +150,10 @@ def postid(request, post_id):
                 return JsonResponse({"message": "Post liked successfully."}, status=201)
             
         if (data.get("unlikes")):
-                lik = Likes(liked_by=request.user, post_liked=post)
+                like = Likes.objects.get(liked_by=request.user, post_liked=post)
+                # Decrement the likes count and delete the like record
                 post.likes = F('likes') - 1
-                lik.save()
+                like.delete()
                 post.save()
                 return JsonResponse({"message": "Post unliked successfully."}, status=201)
 
